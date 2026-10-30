@@ -72,7 +72,7 @@ int transfer(int _fd,uint8_t *send, uint8_t *recv, unsigned len)
         .tx_buf = (uintptr_t)send,
         .rx_buf = (uintptr_t)recv,
         .len = len,
-        .speed_hz = 30000,
+        .speed_hz = 100000,
         .bits_per_word = 8,
     };
     
@@ -179,22 +179,26 @@ int write_file(int fd, FILE* fp){
 } 
 
 int rewrite(int fd){
-    uint8_t buf[2]={0x12};//3c
-    // give_some_fucking_sclk_cycles();
-    return transfer(fd,buf,buf,2);   
+    uint8_t buf[2]={0x3C};//3c
+    give_some_sclk_cycles();  
+    int ret = transfer(fd,buf,buf,2);
+    give_some_sclk_cycles();  
+    return ret;
 }
 
 int erase_sram(int fd){
     uint8_t buf[2]={0x05};
-    // give_some_fucking_sclk_cycles();
-    return transfer(fd,buf,buf,2);       
+    give_some_sclk_cycles();
+    int ret = transfer(fd,buf,buf,2);
+    give_some_sclk_cycles();  
+    return ret;       
 }
 
 int write_disable(int fd){
     uint8_t buf[2]={0x3A};
-
+    give_some_sclk_cycles();
     int result=transfer(fd,buf,buf,2);     
-    give_some_fucking_sclk_cycles();
+    give_some_sclk_cycles();
 
     return result;
 }
@@ -244,38 +248,17 @@ int main(int argc,char **argv){
     // give_some_fucking_sclk_cycles();
 
     // set_cs("0");
-    // write_something(fd);
+    write_something(fd);
 
 
     // set_cs("1");
     
 
-
-
-    // fd = open(device, O_RDWR);
-    // printf("open spidevice:%s\n",device);
-
-    // mode = SPI_MODE_0;
-    // ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
-
-	// if (ret == -1)
-	// 	printf("can't set spi mode\n");
-
-	// ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
-	// if (ret == -1)
-	// 	printf("can't get spi mode\n");
-
-    // if(mode!=SPI_MODE_0){
-    //     printf("can't set spi mode!\n");
-    // }
-   
-
     // erase_sram(fd);
-    give_some_fucking_sclk_cycles();
     sleep(1);
     rewrite(fd);
     // give_some_fucking_sclk_cycles();
-    give_some_fucking_sclk_cycles();
+
     get_all_codes(fd);
 
     write_enable(fd);
@@ -286,8 +269,10 @@ int main(int argc,char **argv){
 
     get_all_codes(fd);
 
-    write_disable(fd);
+    // sleep(1);
 
+    write_disable(fd);
+    sleep(1);
     uint32_t status=0;
     status=get_all_codes(fd);
 
