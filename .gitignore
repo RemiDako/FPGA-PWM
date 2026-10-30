@@ -38,6 +38,7 @@ bin/
 *.vcd
 !tester/src/test/resources/*.vhd
 
+.pdf
 
 simWorkspace/
 tmp/
