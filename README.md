@@ -70,9 +70,12 @@ This module is licensed under the GPL 3.0 license. Please see the [LICENSE](LICE
 
 ## 修改信息
 
-增加了fpga_config/,
+增加了fpga_config/,可以使用SPI对高云FPGA的SRAM进行配置。
+在fpga_config/使用 make 进行编译，将可执行程序传入嵌入式系统中，使用下面的指令进行SSPI配置：
+```bash
+./gowin_sspi /dev/spidevX.X bitstream.bin
+```
 
 ## 版权信息
 
 该FPGA PWM模块是基于GPL 3.0许可证发布的，您可以自由使用、修改和分发该模块。
-
