@@ -54,11 +54,11 @@ void set_cs(char * target){
 }
 
 void give_some_sclk_cycles(){
-    uint8_t buf[3]={0x00,0x00,0x00};
-    // just for making gowin fpga happy
-    int fdd = open("/dev/spidev0.1", O_RDWR);
-    transfer(fdd,buf,buf,3);
-    close(fdd);
+    // uint8_t buf[3]={0xFF,0xFF,0xFF};
+    // // just for making gowin fpga happy
+    // int fdd = open("/dev/spidev0.1", O_RDWR);
+    // transfer(fdd,buf,buf,3);
+    // close(fdd);
 }
 
 int transfer(int _fd,uint8_t *send, uint8_t *recv, unsigned len)
@@ -110,7 +110,7 @@ int write_enable(int fd){
 int write_something(int fd){
     uint8_t buf[3]={0xff,0xff,0xff};
     give_some_sclk_cycles();
-    int ret = transfer(fd,buf,buf,3);
+    int ret = transfer(fd,buf,buf,1);
     give_some_sclk_cycles();
     return ret;
 }
@@ -140,13 +140,13 @@ int write_something(int fd){
 //     return 0;
 // }
 
-uint8_t file_buffer[352732]={0x3B};
+uint8_t file_buffer[352763]={0x3B};
 
 int write_file(int fd, FILE* fp){
     int num=0;
     int i=0;
     int mode,ret;
-    num=fread(file_buffer+1,1,352732,fp);
+    num=fread(file_buffer+1,1,352763,fp);
     printf("file size:%d\n",num);
     
     //transfer(fd,file_buffer,file_buffer,4096); 
@@ -179,7 +179,15 @@ int write_file(int fd, FILE* fp){
 } 
 
 int rewrite(int fd){
-    uint8_t buf[2]={0x3C};//3c
+    uint8_t buf[2]={0x3C};
+    give_some_sclk_cycles();  
+    int ret = transfer(fd,buf,buf,2);
+    give_some_sclk_cycles();  
+    return ret;
+}
+
+int initAddr(int fd){
+    uint8_t buf[2]={0x12};
     give_some_sclk_cycles();  
     int ret = transfer(fd,buf,buf,2);
     give_some_sclk_cycles();  
@@ -206,7 +214,7 @@ int write_disable(int fd){
 uint32_t get_all_codes(int fd){
     // print all code, return status code
     get_codes(fd,READ_ID_CODE);
-    get_codes(fd,USER_CODE); 
+    // get_codes(fd,USER_CODE); 
     return get_codes(fd,STATUS_CODE);
 }
 
@@ -248,7 +256,6 @@ int main(int argc,char **argv){
     // give_some_fucking_sclk_cycles();
 
     // set_cs("0");
-    write_something(fd);
 
 
     // set_cs("1");
@@ -257,6 +264,8 @@ int main(int argc,char **argv){
     // erase_sram(fd);
     sleep(1);
     rewrite(fd);
+
+    initAddr(fd);
     // give_some_fucking_sclk_cycles();
 
     get_all_codes(fd);
