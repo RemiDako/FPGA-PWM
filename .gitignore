@@ -43,3 +43,5 @@ bin/
 simWorkspace/
 tmp/
 null
+fpga_config/i2c_pwm.bin
+fpga_config/pwm

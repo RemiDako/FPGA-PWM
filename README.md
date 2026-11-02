@@ -68,6 +68,10 @@ This module is licensed under the GPL 3.0 license. Please see the [LICENSE](LICE
 | 0x7e | timeout max high | 超时值高16位                                   |
 | 0x7d | timeout max low | 超时值低16位                                   |
 
+## 修改信息
+
+增加了fpga_config/,
+
 ## 版权信息
 
 该FPGA PWM模块是基于GPL 3.0许可证发布的，您可以自由使用、修改和分发该模块。
