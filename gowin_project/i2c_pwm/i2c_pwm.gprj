@@ -3,7 +3,7 @@
 <Project>
     <Template>FPGA</Template>
     <Version>5</Version>
-    <Device name="GW1N-2C" pn="GW1N-LV2QN32C6/I5">gw1n2c-063</Device>
+    <Device name="GW1N-1" pn="GW1N-LV1QN32C6/I5">gw1n1-002</Device>
     <FileList>
         <File path="src/SPI_PWM_Top.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_osc/gowin_osc.v" type="file.verilog" enable="1"/>
